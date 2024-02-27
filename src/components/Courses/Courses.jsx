@@ -50,7 +50,11 @@ export const Courses = ({ coursesList, authorsList, handleShowCourse }) => {
   return (
     <>
       <div className={styles.panel}>
-        <Button buttonText={ADD_NEW_COURSE} handleClick={() => {}} />
+        <Button
+          buttonText={ADD_NEW_COURSE}
+          data-testid="addCourse"
+          handleClick={() => {}}
+        />
       </div>
       {coursesList.length ? (
         coursesList.map((course) => (
