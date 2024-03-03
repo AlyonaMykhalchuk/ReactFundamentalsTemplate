@@ -1,6 +1,8 @@
 import React from "react";
 
 import styles from "./styles.module.css";
+import { Button } from "../../common";
+import { CourseCard } from "./components";
 
 // Module 1:
 // * render list of components using 'CourseCard' component for each course
@@ -30,19 +32,44 @@ import styles from "./styles.module.css";
 // * proposed cases for unit tests:
 //   ** Courses should display amount of CourseCard equal length of courses array.
 //   ** CourseForm should be shown after a click on the "Add new course" button.
-
+const ADD_NEW_COURSE = "ADD NEW COURSE";
 export const Courses = ({ coursesList, authorsList, handleShowCourse }) => {
   // write your code here
-
+  const EmptyCourseList = () => {
+    return (
+      <div className={styles.emptyContainer} data-testid="emptyList">
+        <h2>Your List Is Empty</h2>
+        <p>Please use "Add New Course" button to add your first course.</p>
+        <Button buttonText={ADD_NEW_COURSE} />
+      </div>
+    );
+  };
   // for EmptyCourseList component container use data-testid="emptyContainer" attribute
   // for button in EmptyCourseList component add data-testid="addCourse" attribute
 
   return (
     <>
       <div className={styles.panel}>
-        // reuse Button component for 'ADD NEW COURSE' button
+        <Button
+          buttonText={ADD_NEW_COURSE}
+          data-testid="addCourse"
+          handleClick={() => {}}
+        />
       </div>
-      // use '.map' array method to render all courses. Use CourseCard component
+      {coursesList.length ? (
+        coursesList.map((course) => (
+          <CourseCard
+            key={course.id}
+            course={course}
+            authorsList={authorsList}
+            handleShowCourse={handleShowCourse}
+          />
+        ))
+      ) : (
+        <div data-testid="emptyContainer">
+          <EmptyCourseList />
+        </div>
+      )}
     </>
   );
 };

@@ -32,7 +32,7 @@
     "eject": "react-scripts eject",
     "coverage": "react-scripts test --coverage --watchAll --coverageReporters=cobertura --coverageDirectory=.",
     "eslint": "eslint --ext .js --ext .jsx src",
-    "eslint:fix": "eslint --fix --ext .js --ext .jsx src",
+    "eslint:fix": "eslint --fix --ext .js --ext .jsx src --max-warnings=0",
     "prepare": "husky install",
     "prepublish": "npm run eslint:fix"
   },
