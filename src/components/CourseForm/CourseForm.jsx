@@ -150,7 +150,11 @@ export const CourseForm = ({
         </div>
       </form>
       <div className={styles.buttonsContainer}>
-        <Button type="submit" buttonText="Create/Update Course" />
+        <Button
+          data-testid="createCourseButton"
+          type="submit"
+          buttonText="CREATE COURSE"
+        />
         <Button buttonText="Cancel" handleClick={() => navigate("/courses")} />
       </div>
     </div>

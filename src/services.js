@@ -33,9 +33,15 @@ export const login = async (data) => {
       throw new Error("Login failed");
     }
 
-    const result = await response.json();
-    // Assuming the token is returned in the response. Adjust as needed.
-    return result.token;
+    const { successful, result, user } = await response.json();
+
+    if (successful && result) {
+      localStorage.setItem("token", result);
+      localStorage.setItem("userData", JSON.stringify(user));
+      return user.name;
+    } else {
+      throw new Error("Login failed: No result or unsuccessful");
+    }
   } catch (error) {
     console.error("Error logging in:", error);
     throw error;

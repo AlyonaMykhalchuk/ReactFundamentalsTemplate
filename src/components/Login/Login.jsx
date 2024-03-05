@@ -74,10 +74,8 @@ export const Login = () => {
           <Button buttonText="Login" />
           {error && <div className={styles.error}>{error}</div>}
         </form>
-        <p>
-          If you don't have an account you may&nbsp;
-          <Link to="/registration">Register</Link>
-        </p>
+        <p>If you don't have an account you may&nbsp;</p>
+        <Link to="/registration">Registration</Link>
       </div>
     </div>
   );

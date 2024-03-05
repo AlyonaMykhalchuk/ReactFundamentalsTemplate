@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import styles from "./App.module.css";
 import {
   CourseForm,
@@ -32,12 +32,14 @@ function App() {
   const token = localStorage.getItem("userToken");
   const navigate = useNavigate();
   // const [selectedCourse, setSelectedCourse] = useState(null);
-
+  const location = useLocation();
   useEffect(() => {
     if (token) {
-      navigate("/courses");
+      if (location.pathname === "/" || location.pathname === "/login") {
+        navigate("/courses");
+      }
     }
-  }, [token, navigate]);
+  }, [token, navigate, location.pathname]);
 
   const handleShowCourse = (courseId) => {
     console.log(courseId);
@@ -66,6 +68,7 @@ function App() {
               />
             }
           />
+          <Route path="/" element={<Login />} />
           <Route path="/login" element={<Login />} />
           <Route path="/registration" element={<Registration />} />
           <Route

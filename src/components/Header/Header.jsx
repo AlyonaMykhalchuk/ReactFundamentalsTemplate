@@ -37,10 +37,10 @@ export const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const token = localStorage.getItem("token");
-  const userName = localStorage.getItem("userName");
+  const userName = JSON.parse(localStorage.getItem("userData"));
   const handleLogout = () => {
     localStorage.removeItem("token");
-    localStorage.removeItem("userName"); // Clean up user's name on logout
+    localStorage.removeItem("userData"); // Clean up user's name on logout
     navigate("/login");
   };
   const isAuthPage =
@@ -52,7 +52,7 @@ export const Header = () => {
       <div className={styles.userContainer}>
         {!isAuthPage && token && (
           <>
-            <p className={styles.userName}>{userName || "User"}</p>
+            <p className={styles.userName}>{userName.name || "User"}</p>
             <Button
               buttonText="Logout"
               handleClick={handleLogout}
@@ -60,7 +60,7 @@ export const Header = () => {
             />
           </>
         )}
-        {isAuthPage && !token && (
+        {!isAuthPage && !token && (
           <Button
             buttonText="Login"
             handleClick={() => navigate("/login")}
