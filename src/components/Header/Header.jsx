@@ -3,7 +3,7 @@ import React from "react";
 import styles from "./styles.module.css";
 import { Logo } from "./components";
 import { Button } from "../../common";
-
+import { useLocation, useNavigate } from "react-router-dom";
 // Module 1:
 // * add Logo and Button components
 // * add Header component to the App component
@@ -34,18 +34,39 @@ import { Button } from "../../common";
 //   ** Header should have logo and user's name.
 
 export const Header = () => {
-  // write your code here
+  const navigate = useNavigate();
+  const location = useLocation();
+  const token = localStorage.getItem("token");
+  const userName = localStorage.getItem("userName");
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userName"); // Clean up user's name on logout
+    navigate("/login");
+  };
+  const isAuthPage =
+    location.pathname === "/login" || location.pathname === "/registration";
 
   return (
     <div className={styles.headerContainer}>
       <Logo />
       <div className={styles.userContainer}>
-        <p className={styles.userName}>Harry Potter</p>
-        <Button
-          buttonText="Login"
-          handleClick={() => {}}
-          data-testid="login-button"
-        />
+        {!isAuthPage && token && (
+          <>
+            <p className={styles.userName}>{userName || "User"}</p>
+            <Button
+              buttonText="Logout"
+              handleClick={handleLogout}
+              data-testid="logout-button"
+            />
+          </>
+        )}
+        {isAuthPage && !token && (
+          <Button
+            buttonText="Login"
+            handleClick={() => navigate("/login")}
+            data-testid="login-button"
+          />
+        )}
       </div>
     </div>
   );
