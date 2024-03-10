@@ -49,7 +49,7 @@ export const CourseCard = ({ course, handleShowCourse, authorsList }) => {
   return (
     <div className={styles.cardContainer} data-testid="courseCard">
       <div className={styles.cardText}>
-        <h2>{course.title}</h2>
+        <h2>{course?.title}</h2>
         <p>{course.description}</p>
       </div>
       <div className={styles.cardDetails}>
@@ -75,7 +75,7 @@ export const CourseCard = ({ course, handleShowCourse, authorsList }) => {
           <Button
             buttonText={SHOW_COURSE}
             handleClick={() => {
-              handleShowCourse(course);
+              handleShowCourse(course.id);
             }}
           />
         </div>

@@ -1,13 +1,15 @@
-import React, { useState } from "react";
-
+import React, { useEffect } from "react";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import styles from "./App.module.css";
-import { CourseInfo, Courses, Header } from "./components";
+import {
+  CourseForm,
+  CourseInfo,
+  Courses,
+  Header,
+  Login,
+  Registration,
+} from "./components";
 import { mockedAuthorsList, mockedCoursesList } from "./constants";
-
-// Module 1:
-// * use mockedAuthorsList and mockedCoursesList mocked data
-// * add next components to the App component: Header, Courses and CourseInfo
-// * pass 'mockedAuthorsList' and 'mockedCoursesList' to the Courses and CourseInfo components
 
 // Module 2:
 // * use mockedAuthorsList and mockedCoursesList mocked data
@@ -27,32 +29,62 @@ import { mockedAuthorsList, mockedCoursesList } from "./constants";
 // * wrap 'CourseForm' in the 'PrivateRoute' component
 
 function App() {
-  const [selectedCourse, setSelectedCourse] = useState(null);
-  const handleShowCourse = (course) => {
-    setSelectedCourse(course);
+  const token = localStorage.getItem("userToken");
+  const navigate = useNavigate();
+  // const [selectedCourse, setSelectedCourse] = useState(null);
+  const location = useLocation();
+  useEffect(() => {
+    if (token) {
+      if (location.pathname === "/" || location.pathname === "/login") {
+        navigate("/courses");
+      }
+    }
+  }, [token, navigate, location.pathname]);
+
+  const handleShowCourse = (courseId) => {
+    console.log(courseId);
+    navigate(`/courses/${courseId}`);
   };
-  const handleBack = () => {
-    setSelectedCourse(null);
-  };
+
+  // const handleAddCourse = () => {
+  //   navigate("/courses/add");
+  // };
+
+  // const handleBack = () => {
+  //   setSelectedCourse(null);
+  // };
   return (
     <div className={styles.wrapper}>
-      {/* place Header component */}
       <Header />
       <div className={styles.container}>
-        {selectedCourse ? (
-          <CourseInfo
-            coursesList={mockedCoursesList}
-            authorsList={mockedAuthorsList}
-            showCourseId={selectedCourse.id}
-            onBack={handleBack}
+        <Routes>
+          <Route
+            path="/courses"
+            element={
+              <Courses
+                coursesList={mockedCoursesList}
+                authorsList={mockedAuthorsList}
+                handleShowCourse={handleShowCourse}
+              />
+            }
           />
-        ) : (
-          <Courses
-            coursesList={mockedCoursesList}
-            authorsList={mockedAuthorsList}
-            handleShowCourse={handleShowCourse}
+          <Route path="/" element={<Login />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/registration" element={<Registration />} />
+          <Route
+            path="/courses/add"
+            element={<CourseForm authorsList={mockedAuthorsList} />}
           />
-        )}
+          <Route
+            path="/courses/:courseId"
+            element={
+              <CourseInfo
+                coursesList={mockedCoursesList}
+                authorsList={mockedAuthorsList}
+              />
+            }
+          />
+        </Routes>
       </div>
     </div>
   );
