@@ -34,18 +34,27 @@ import React from "react";
 
 import { getCourseDuration, formatCreationDate } from "../../../../helpers";
 
-// import deleteIcon from "../../../../assets/deleteButtonIcon.svg";
-// import editIcon from "../../../../assets/editButtonIcon.svg";
+import deleteIcon from "../../../../assets/deleteButtonIcon.svg";
+import editIcon from "../../../../assets/editButtonIcon.svg";
 
 import styles from "./styles.module.css";
 import { Button } from "../../../../common";
+import { Link } from "react-router-dom";
+import { deleteCourse } from "../../../../store/slices/coursesSlice";
+import { useDispatch } from "react-redux";
 const SHOW_COURSE = "SHOW COURSE";
+
 export const CourseCard = ({ course, handleShowCourse, authorsList }) => {
-  // write your code here
+  const dispatch = useDispatch();
+
   const authorsNames = course.authors
     .map((id) => authorsList.find((author) => author.id === id)?.name)
     .filter((name) => name)
     .join(", ");
+
+  const handleDelete = (courseId) => {
+    dispatch(deleteCourse(courseId));
+  };
   return (
     <div className={styles.cardContainer} data-testid="courseCard">
       <div className={styles.cardText}>
@@ -66,12 +75,15 @@ export const CourseCard = ({ course, handleShowCourse, authorsList }) => {
           <span>{formatCreationDate(course.creationDate)}</span>
         </p>
         <div className={styles.buttonsContainer}>
-          {/*
-				reuse Button	component with deleteButtonIcon from 'src/assets' for 'Delete' button
-						with data-testid="deleteCourse" 
-				reuse Link component with editButtonIcon from 'src/assets' for 'Update' button with
-						data-testid="updateCourse" 
-			*/}
+          <Button
+            icon={deleteIcon}
+            data-testid="deleteCourse"
+            handleClick={() => handleDelete(course.id)}
+          />
+
+          <Link to="#" data-testid="updateCourse">
+            <img src={editIcon} alt="Edit" />
+          </Link>
           <Button
             buttonText={SHOW_COURSE}
             handleClick={() => {
