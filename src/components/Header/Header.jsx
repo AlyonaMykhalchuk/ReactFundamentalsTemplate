@@ -3,7 +3,10 @@ import React from "react";
 import styles from "./styles.module.css";
 import { Logo } from "./components";
 import { Button } from "../../common";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { getUserNameSelector } from "../../store/selectors";
+import { removeUserData } from "../../store/slices/userSlice";
 // Module 1:
 // * add Logo and Button components
 // * add Header component to the App component
@@ -35,24 +38,28 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 export const Header = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const token = localStorage.getItem("token");
-  const userName = JSON.parse(localStorage.getItem("userData"));
+  const dispatch = useDispatch();
+
+  const userName = useSelector(getUserNameSelector);
+  const isUserLoggedIn = useSelector((state) => state.user.isAuth);
   const handleLogout = () => {
+    dispatch(removeUserData());
+
     localStorage.removeItem("token");
-    localStorage.removeItem("userData"); // Clean up user's name on logout
+    localStorage.removeItem("userData");
+
     navigate("/login");
   };
-  const isAuthPage =
-    location.pathname === "/login" || location.pathname === "/registration";
+  // const isAuthPage =
+  //   location.pathname === "/login" || location.pathname === "/registration";
 
   return (
     <div className={styles.headerContainer}>
       <Logo />
       <div className={styles.userContainer}>
-        {!isAuthPage && token && (
+        {isUserLoggedIn && (
           <>
-            <p className={styles.userName}>{userName.name || "User"}</p>
+            <p className={styles.userName}>{userName || "User"}</p>
             <Button
               buttonText="Logout"
               handleClick={handleLogout}
@@ -60,7 +67,7 @@ export const Header = () => {
             />
           </>
         )}
-        {!isAuthPage && !token && (
+        {!isUserLoggedIn && (
           <Button
             buttonText="Login"
             handleClick={() => navigate("/login")}

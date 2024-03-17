@@ -51,18 +51,19 @@ import { Button, Input } from "../../common";
 import { AuthorItem, CreateAuthor } from "./components";
 import { getCourseDuration } from "../../helpers";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { saveCourse } from "../../store/slices/coursesSlice";
+import { saveAuthor } from "../../store/slices/authorsSlice";
 
-export const CourseForm = ({
-  authorsList = [],
-  createCourse,
-  createAuthor,
-}) => {
-  //write your code here
+export const CourseForm = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [duration, setDuration] = useState(0);
   const [courseAuthors, setCourseAuthors] = useState([]);
+  const [authorsList, setAuthorsList] = useState([]);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const handleAddAuthorToCourse = (authorId) => {
     const authorToAdd = authorsList.find((author) => author.id === authorId);
     if (authorToAdd) {
@@ -73,16 +74,21 @@ export const CourseForm = ({
   const handleRemoveAuthorFromCourse = (authorId) => {
     setCourseAuthors(courseAuthors.filter((author) => author.id !== authorId));
   };
-
+  const handleCreateAuthor = (authorName) => {
+    const newAuthor = { id: Date.now().toString(), name: authorName };
+    dispatch(saveAuthor(newAuthor));
+    setAuthorsList([...authorsList, newAuthor]);
+  };
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Validation logic here
-    createCourse({
+    const newCourse = {
+      id: Date.now().toString(), // Simplified ID generation
       title,
       description,
       duration,
       authors: courseAuthors.map((author) => author.id),
-    });
+    };
+    dispatch(saveCourse(newCourse));
     navigate("/courses"); // Adjust as needed
   };
 
@@ -121,7 +127,7 @@ export const CourseForm = ({
               <p>{getCourseDuration(duration)}</p>
             </div>
             <h2>Authors</h2>
-            <CreateAuthor createAuthor={createAuthor} />
+            <CreateAuthor createAuthor={handleCreateAuthor} />
             <div className={styles.authorsContainer}>
               <h3>Authors List</h3>
               {authorsList.map((author) => (

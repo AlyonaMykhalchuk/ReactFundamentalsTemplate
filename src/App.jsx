@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import styles from "./App.module.css";
 import {
@@ -9,12 +9,10 @@ import {
   Login,
   Registration,
 } from "./components";
-import { mockedAuthorsList, mockedCoursesList } from "./constants";
-
-// Module 2:
-// * use mockedAuthorsList and mockedCoursesList mocked data
-// * wrap your App with BrowserRouter in src/index.js
-// ** TASK DESCRIPTION ** - https://d17btkcdsmqrmh.cloudfront.net/new-react-fundamentals/docs/module-2/home-task/components#add-the-router-to-the-app-component
+import { useDispatch } from "react-redux";
+import { getAuthors, getCourses } from "./services";
+import { setCourses } from "./store/slices/coursesSlice";
+import { setAuthors } from "./store/slices/authorsSlice";
 
 // Module 3:
 // * wrap your App with Redux Provider in src/index.js
@@ -29,10 +27,22 @@ import { mockedAuthorsList, mockedCoursesList } from "./constants";
 // * wrap 'CourseForm' in the 'PrivateRoute' component
 
 function App() {
-  const token = localStorage.getItem("userToken");
+  const token = localStorage.getItem("token");
   const navigate = useNavigate();
-  // const [selectedCourse, setSelectedCourse] = useState(null);
   const location = useLocation();
+  const dispatch = useDispatch();
+
+  const fetchInitData = useCallback(async () => {
+    const courses = await getCourses();
+    console.log("courses", courses);
+    dispatch(setCourses(courses.result));
+    const authors = await getAuthors();
+    dispatch(setAuthors(authors.result));
+  }, [dispatch]);
+
+  useEffect(() => {
+    fetchInitData();
+  }, [fetchInitData]);
   useEffect(() => {
     if (token) {
       if (location.pathname === "/" || location.pathname === "/login") {
@@ -42,17 +52,8 @@ function App() {
   }, [token, navigate, location.pathname]);
 
   const handleShowCourse = (courseId) => {
-    console.log(courseId);
     navigate(`/courses/${courseId}`);
   };
-
-  // const handleAddCourse = () => {
-  //   navigate("/courses/add");
-  // };
-
-  // const handleBack = () => {
-  //   setSelectedCourse(null);
-  // };
   return (
     <div className={styles.wrapper}>
       <Header />
@@ -60,30 +61,13 @@ function App() {
         <Routes>
           <Route
             path="/courses"
-            element={
-              <Courses
-                coursesList={mockedCoursesList}
-                authorsList={mockedAuthorsList}
-                handleShowCourse={handleShowCourse}
-              />
-            }
+            element={<Courses handleShowCourse={handleShowCourse} />}
           />
           <Route path="/" element={<Login />} />
           <Route path="/login" element={<Login />} />
           <Route path="/registration" element={<Registration />} />
-          <Route
-            path="/courses/add"
-            element={<CourseForm authorsList={mockedAuthorsList} />}
-          />
-          <Route
-            path="/courses/:courseId"
-            element={
-              <CourseInfo
-                coursesList={mockedCoursesList}
-                authorsList={mockedAuthorsList}
-              />
-            }
-          />
+          <Route path="/courses/add" element={<CourseForm />} />
+          <Route path="/courses/:courseId" element={<CourseInfo />} />
         </Routes>
       </div>
     </div>
