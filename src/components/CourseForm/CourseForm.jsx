@@ -52,10 +52,7 @@ import { AuthorItem, CreateAuthor } from "./components";
 import { getCourseDuration } from "../../helpers";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { saveCourse } from "../../store/slices/coursesSlice";
-import { saveAuthor } from "../../store/slices/authorsSlice";
 import { getUserRoleSelector } from "../../store/selectors";
-import { createAuthorThunk } from "../../store/thunks/authorsThunk";
 import {
   createCourseThunk,
   updateCourseThunk,
@@ -71,7 +68,7 @@ export const CourseForm = () => {
   const [description, setDescription] = useState("");
   const [duration, setDuration] = useState(0);
   const [courseAuthors, setCourseAuthors] = useState([]);
-  const [authorsList, setAuthorsList] = useState([]);
+  const [authorsList] = useState([]);
 
   const handleAddAuthorToCourse = (authorId) => {
     const authorToAdd = authorsList.find((author) => author.id === authorId);

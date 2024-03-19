@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from "react";
-import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import styles from "./App.module.css";
 import {
   CourseForm,
@@ -11,9 +11,6 @@ import {
   Registration,
 } from "./components";
 import { useDispatch } from "react-redux";
-import { getAuthors, getCourses } from "./services";
-import { setCourses } from "./store/slices/coursesSlice";
-import { setAuthors } from "./store/slices/authorsSlice";
 import { getAuthorsThunk } from "./store/thunks/authorsThunk";
 import { getCoursesThunk } from "./store/thunks/coursesThunk";
 import { getUserThunk } from "./store/thunks/userThunk";
@@ -26,7 +23,6 @@ import { getUserThunk } from "./store/thunks/userThunk";
 function App() {
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
-  const location = useLocation();
   const dispatch = useDispatch();
   useEffect(() => {
     const token = localStorage.getItem("token");
