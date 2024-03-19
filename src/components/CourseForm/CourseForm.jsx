@@ -44,25 +44,34 @@
 //   **  CourseForm 'Add author' button click should add an author to the course authors list.
 //   **  CourseForm 'Delete author' button click should delete an author from the course list.
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import styles from "./styles.module.css";
 import { Button, Input } from "../../common";
 import { AuthorItem, CreateAuthor } from "./components";
 import { getCourseDuration } from "../../helpers";
-import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { saveCourse } from "../../store/slices/coursesSlice";
 import { saveAuthor } from "../../store/slices/authorsSlice";
+import { getUserRoleSelector } from "../../store/selectors";
+import { createAuthorThunk } from "../../store/thunks/authorsThunk";
+import {
+  createCourseThunk,
+  updateCourseThunk,
+} from "../../store/thunks/coursesThunk";
 
 export const CourseForm = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { courseId } = useParams();
+  const userRole = useSelector(getUserRoleSelector);
+
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [duration, setDuration] = useState(0);
   const [courseAuthors, setCourseAuthors] = useState([]);
   const [authorsList, setAuthorsList] = useState([]);
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   const handleAddAuthorToCourse = (authorId) => {
     const authorToAdd = authorsList.find((author) => author.id === authorId);
@@ -74,22 +83,28 @@ export const CourseForm = () => {
   const handleRemoveAuthorFromCourse = (authorId) => {
     setCourseAuthors(courseAuthors.filter((author) => author.id !== authorId));
   };
-  const handleCreateAuthor = (authorName) => {
-    const newAuthor = { id: Date.now().toString(), name: authorName };
-    dispatch(saveAuthor(newAuthor));
-    setAuthorsList([...authorsList, newAuthor]);
-  };
+  useEffect(() => {
+    if (userRole !== "admin") {
+      navigate("/courses");
+    }
+  }, [navigate, userRole]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    const newCourse = {
-      id: Date.now().toString(), // Simplified ID generation
+    const courseData = {
       title,
       description,
-      duration,
+      duration: Number(duration),
       authors: courseAuthors.map((author) => author.id),
     };
-    dispatch(saveCourse(newCourse));
-    navigate("/courses"); // Adjust as needed
+
+    if (courseId) {
+      dispatch(updateCourseThunk(courseId, courseData));
+    } else {
+      dispatch(createCourseThunk(courseData));
+    }
+
+    navigate("/courses");
   };
 
   return (
@@ -127,7 +142,7 @@ export const CourseForm = () => {
               <p>{getCourseDuration(duration)}</p>
             </div>
             <h2>Authors</h2>
-            <CreateAuthor createAuthor={handleCreateAuthor} />
+            <CreateAuthor />
             <div className={styles.authorsContainer}>
               <h3>Authors List</h3>
               {authorsList.map((author) => (
@@ -159,7 +174,7 @@ export const CourseForm = () => {
         <Button
           data-testid="createCourseButton"
           type="submit"
-          buttonText="CREATE COURSE"
+          buttonText={courseId ? "UPDATE COURSE" : "CREATE COURSE"}
         />
         <Button buttonText="Cancel" handleClick={() => navigate("/courses")} />
       </div>

@@ -5,19 +5,11 @@ import { Button } from "../../common";
 import { CourseCard } from "./components";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { getAuthorsSelector, getCoursesSelector } from "../../store/selectors";
-
-// Module 2:
-// * render this component by route '/courses'
-// * navigate to this component if 'localStorage' contains user's token
-// * navigate to the route courses/add by clicking Add New Course button.
-// ** TASK DESCRIPTION ** - https://d17btkcdsmqrmh.cloudfront.net/new-react-fundamentals/docs/module-2/home-task/components#courses
-
-// Module 3:
-// * stop using mocked courses and authors data
-// * delete props 'coursesList' and 'authorsList'
-// * use useSelector to get courses and authors from the store. Use selectors...
-// ** TASK DESCRIPTION ** - https://d17btkcdsmqrmh.cloudfront.net/new-react-fundamentals/docs/module-3/home-task/components#courses-component
+import {
+  getAuthorsSelector,
+  getCoursesSelector,
+  getUserRoleSelector,
+} from "../../store/selectors";
 
 // Module 4:
 // navigate to '/courses/add' route by clicking 'ADD NEW COURSE' button in the 'EmptyCourseList'.
@@ -34,32 +26,41 @@ export const Courses = ({ handleShowCourse }) => {
   const coursesList = useSelector(getCoursesSelector);
   const authorsList = useSelector(getAuthorsSelector);
 
+  const userRole = useSelector(getUserRoleSelector);
+  console.log("userRole=", userRole);
   const handleAddCourseClick = () => {
-    navigate("/courses/add");
+    if (userRole === "admin") {
+      console.log("navigate");
+      navigate("/courses/add");
+    }
   };
   const EmptyCourseList = () => {
     return (
       <div data-testid="emptyList">
         <h2>Your List Is Empty</h2>
         <p>Please use "Add New Course" button to add your first course.</p>
-        <Button
-          handleClick={handleAddCourseClick}
-          data-testid="addCourse"
-          buttonText={ADD_NEW_COURSE}
-        />
+        {userRole === "admin" && (
+          <Button
+            handleClick={handleAddCourseClick}
+            data-testid="addCourse"
+            buttonText={ADD_NEW_COURSE}
+          />
+        )}
       </div>
     );
   };
 
   return (
     <>
-      <div className={styles.panel}>
-        <Button
-          buttonText={ADD_NEW_COURSE}
-          data-testid="addCourse"
-          handleClick={handleAddCourseClick}
-        />
-      </div>
+      {userRole === "admin" && (
+        <div className={styles.panel}>
+          <Button
+            buttonText={ADD_NEW_COURSE}
+            data-testid="addCourse"
+            handleClick={handleAddCourseClick}
+          />
+        </div>
+      )}
       {coursesList.length ? (
         coursesList.map((course) => (
           <>

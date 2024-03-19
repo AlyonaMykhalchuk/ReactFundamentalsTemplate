@@ -1,13 +1,17 @@
 import React, { useState } from "react";
 import styles from "./styles.module.css";
 import { Button, Input } from "../../../../common";
+import { createAuthorThunk } from "../../../../store/thunks/authorsThunk";
+import { useDispatch } from "react-redux";
 
-export const CreateAuthor = ({ createAuthor }) => {
+export const CreateAuthor = () => {
   const [authorName, setAuthorName] = useState("");
+  const dispatch = useDispatch();
 
   const handleCreateAuthor = () => {
+    console.log("Author=", authorName);
     if (authorName.trim()) {
-      createAuthor(authorName);
+      dispatch(createAuthorThunk(authorName));
       setAuthorName("");
     }
   };

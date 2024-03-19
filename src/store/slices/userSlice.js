@@ -5,6 +5,7 @@ const initialState = {
   name: "",
   email: "",
   token: localStorage.getItem("token") || "",
+  role: "",
 };
 
 export const userSlice = createSlice({
@@ -12,11 +13,12 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     setUserData: (state, action) => {
-      const { name, email, token } = action.payload;
+      const { name, email, token, role } = action.payload;
       state.isAuth = true;
       state.name = name;
       state.email = email;
       state.token = token;
+      state.role = role;
       localStorage.setItem("token", token); // Assuming you want to set token in localStorage here as well
     },
     removeUserData: (state) => {
@@ -24,6 +26,7 @@ export const userSlice = createSlice({
       state.name = "";
       state.email = "";
       state.token = "";
+      state.role = "";
       localStorage.removeItem("token"); // Clear the token from localStorage on logout
     },
   },
