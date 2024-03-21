@@ -41,12 +41,13 @@ import styles from "./styles.module.css";
 import { Button } from "../../../../common";
 import { Link } from "react-router-dom";
 import { deleteCourse } from "../../../../store/slices/coursesSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { getUserRoleSelector } from "../../../../store/selectors";
 const SHOW_COURSE = "SHOW COURSE";
 
 export const CourseCard = ({ course, handleShowCourse, authorsList }) => {
   const dispatch = useDispatch();
-
+  const userRole = useSelector(getUserRoleSelector);
   const authorsNames = course.authors
     .map((id) => authorsList.find((author) => author.id === id)?.name)
     .filter((name) => name)
@@ -75,15 +76,22 @@ export const CourseCard = ({ course, handleShowCourse, authorsList }) => {
           <span>{formatCreationDate(course.creationDate)}</span>
         </p>
         <div className={styles.buttonsContainer}>
-          <Button
-            icon={deleteIcon}
-            data-testid="deleteCourse"
-            handleClick={() => handleDelete(course.id)}
-          />
+          {userRole === "admin" && (
+            <Button
+              icon={deleteIcon}
+              data-testid="deleteCourse"
+              handleClick={() => handleDelete(course.id)}
+            />
+          )}
 
-          <Link to="#" data-testid="updateCourse">
-            <img src={editIcon} alt="Edit" />
-          </Link>
+          {userRole === "admin" && (
+            <Link
+              to={`/courses/update/${course.id}`}
+              data-testid="updateCourse"
+            >
+              <img src={editIcon} alt="Edit" />
+            </Link>
+          )}
           <Button
             buttonText={SHOW_COURSE}
             handleClick={() => {

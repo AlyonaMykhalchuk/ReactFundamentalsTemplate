@@ -6,7 +6,7 @@ import { Button } from "../../common";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserNameSelector } from "../../store/selectors";
-import { removeUserData } from "../../store/slices/userSlice";
+import { logoutThunk } from "../../store/thunks/userThunk";
 // Module 1:
 // * add Logo and Button components
 // * add Header component to the App component
@@ -43,11 +43,7 @@ export const Header = () => {
   const userName = useSelector(getUserNameSelector);
   const isUserLoggedIn = useSelector((state) => state.user.isAuth);
   const handleLogout = () => {
-    dispatch(removeUserData());
-
-    localStorage.removeItem("token");
-    localStorage.removeItem("userData");
-
+    dispatch(logoutThunk());
     navigate("/login");
   };
   // const isAuthPage =
