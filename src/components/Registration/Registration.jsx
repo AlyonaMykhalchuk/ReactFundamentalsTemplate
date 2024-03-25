@@ -1,15 +1,3 @@
-// Module 1. You don't need to do anything with this component (we had to comment this component for 1st module tests)
-
-// Module 2.
-// * uncomment this component (ctrl + a => ctrl + /)
-// * finish markup according to the figma https://www.figma.com/file/m0N0SGLclqUEGR6TUNvyn9/Fundamentals-Courses?type=design&node-id=2932-219&mode=design&t=0FIG0iRzKcD0s16M-0
-// * add validation for fields: all fields are required. Show validation message. https://www.figma.com/file/m0N0SGLclqUEGR6TUNvyn9/Fundamentals-Courses?type=design&node-id=2932-257&mode=design&t=0FIG0iRzKcD0s16M-0
-// * render this component by route '/registration'
-// * submit form data and make POST API request '/registration'.
-// * after successful registration navigates to '/login' route.
-// * component should have a link to the Login page (see design)
-// ** TASK DESCRIPTION ** - https://d17btkcdsmqrmh.cloudfront.net/new-react-fundamentals/docs/module-2/home-task/components#registration-new-component
-
 import React, { useState } from "react";
 
 import styles from "./styles.module.css";

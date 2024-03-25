@@ -61,7 +61,7 @@ export const CourseInfo = () => {
           <div>
             <b>Authors</b>
             <ul className={styles.authorsList}>
-              {courseAuthors.map((name) => (
+              {courseAuthors?.map((name) => (
                 <li key={name}>{name}</li>
               ))}
             </ul>

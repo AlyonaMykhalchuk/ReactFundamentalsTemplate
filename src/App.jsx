@@ -15,11 +15,6 @@ import { getAuthorsThunk } from "./store/thunks/authorsThunk";
 import { getCoursesThunk } from "./store/thunks/coursesThunk";
 import { getUserThunk } from "./store/thunks/userThunk";
 
-// Module 4:
-// * rewrite old GET requests /courses/all with 'getCoursesThunk' from 'src/store/thunks/coursesThunk.js' using getCourses service from 'src/services.js'.
-// * rewrite old GET requests /authors/all with 'getAuthorsThunk' from 'src/store/thunks/authorsThunk.js' using getAuthors service from 'src/services.js'.
-// * wrap 'CourseForm' in the 'PrivateRoute' component
-
 function App() {
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
@@ -38,13 +33,6 @@ function App() {
   useEffect(() => {
     fetchInitData();
   }, [fetchInitData]);
-  // useEffect(() => {
-  //   if (token) {
-  //     // if (location.pathname === "/" || location.pathname === "/login") {
-  //     navigate("/courses");
-  //   }
-  //   // }
-  // }, [token]);
 
   const handleShowCourse = (courseId) => {
     navigate(`/courses/${courseId}`);

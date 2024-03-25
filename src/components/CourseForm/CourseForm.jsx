@@ -52,7 +52,7 @@ import { AuthorItem, CreateAuthor } from "./components";
 import { getCourseDuration } from "../../helpers";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getUserRoleSelector } from "../../store/selectors";
+import { getAuthorsSelector, getUserRoleSelector } from "../../store/selectors";
 import {
   createCourseThunk,
   updateCourseThunk,
@@ -63,22 +63,26 @@ export const CourseForm = () => {
   const dispatch = useDispatch();
   const { courseId } = useParams();
   const userRole = useSelector(getUserRoleSelector);
-
+  const authorsList = useSelector(getAuthorsSelector);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [duration, setDuration] = useState(0);
   const [courseAuthors, setCourseAuthors] = useState([]);
-  const [authorsList] = useState([]);
 
   const handleAddAuthorToCourse = (authorId) => {
     const authorToAdd = authorsList.find((author) => author.id === authorId);
-    if (authorToAdd) {
-      setCourseAuthors([...courseAuthors, authorToAdd]);
+    if (
+      authorToAdd &&
+      !courseAuthors.some((author) => author.id === authorId)
+    ) {
+      setCourseAuthors((prevAuthors) => [...prevAuthors, authorToAdd]);
     }
   };
 
   const handleRemoveAuthorFromCourse = (authorId) => {
-    setCourseAuthors(courseAuthors.filter((author) => author.id !== authorId));
+    setCourseAuthors((prevAuthors) =>
+      prevAuthors.filter((author) => author.id !== authorId)
+    );
   };
   useEffect(() => {
     if (userRole !== "admin") {

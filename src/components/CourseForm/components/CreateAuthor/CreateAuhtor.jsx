@@ -9,7 +9,6 @@ export const CreateAuthor = () => {
   const dispatch = useDispatch();
 
   const handleCreateAuthor = () => {
-    console.log("Author=", authorName);
     if (authorName.trim()) {
       dispatch(createAuthorThunk(authorName));
       setAuthorName("");

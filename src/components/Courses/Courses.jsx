@@ -11,15 +11,6 @@ import {
   getUserRoleSelector,
 } from "../../store/selectors";
 
-// Module 4:
-// navigate to '/courses/add' route by clicking 'ADD NEW COURSE' button in the 'EmptyCourseList'.
-// show message 'You don't have permissions to create a course. Please log in as ADMIN' by clicking ADD NEW COURSE button in the 'EmptyCourseList'.
-// ** TASK DESCRIPTION ** - https://d17btkcdsmqrmh.cloudfront.net/new-react-fundamentals/docs/module-4/home-task/components#emptycourselist-component
-
-// Module 5:
-// * proposed cases for unit tests:
-//   ** Courses should display amount of CourseCard equal length of courses array.
-//   ** CourseForm should be shown after a click on the "Add new course" button.
 const ADD_NEW_COURSE = "ADD NEW COURSE";
 export const Courses = ({ handleShowCourse }) => {
   const navigate = useNavigate();
@@ -27,10 +18,8 @@ export const Courses = ({ handleShowCourse }) => {
   const authorsList = useSelector(getAuthorsSelector);
 
   const userRole = useSelector(getUserRoleSelector);
-  console.log("userRole=", userRole);
   const handleAddCourseClick = () => {
     if (userRole === "admin") {
-      console.log("navigate");
       navigate("/courses/add");
     }
   };
@@ -63,14 +52,12 @@ export const Courses = ({ handleShowCourse }) => {
       )}
       {coursesList.length ? (
         coursesList.map((course) => (
-          <>
-            <CourseCard
-              key={course.id}
-              course={course}
-              authorsList={authorsList}
-              handleShowCourse={handleShowCourse}
-            />
-          </>
+          <CourseCard
+            key={course.id}
+            course={course}
+            authorsList={authorsList}
+            handleShowCourse={handleShowCourse}
+          />
         ))
       ) : (
         <div data-testid="emptyContainer">
