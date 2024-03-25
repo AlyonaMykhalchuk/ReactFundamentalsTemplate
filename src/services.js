@@ -8,7 +8,7 @@ export const createUser = async (data) => {
       body: JSON.stringify(data),
     });
 
-    if (!response.ok) {
+    if (!response?.ok) {
       throw new Error("Failed to create user");
     }
 

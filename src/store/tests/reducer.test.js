@@ -1,22 +1,9 @@
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
-import {
-  getAuthors,
-} from "../../services";
-import {
-  authorsSlice,
-  setAuthors,
-  saveAuthor,
-} from "../slices/authorsSlice";
-import {
-  coursesSlice,
-  setCourses,
-} from "../slices/coursesSlice";
-import {
-  userSlice,
-  setUserData,
-  removeUserData,
-} from "../slices/userSlice";
+import { getAuthors } from "../../services";
+import { authorsSlice, setAuthors, saveAuthor } from "../slices/authorsSlice";
+import { coursesSlice, setCourses } from "../slices/coursesSlice";
+import { userSlice, setUserData, removeUserData } from "../slices/userSlice";
 import { getAuthorsThunk } from "../thunks/authorsThunk";
 
 jest.mock("../../services");
